@@ -43,7 +43,7 @@ body.modal-open::after {
   width: 100vw;
   height: 100vh;
   background-color: #0007;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
 }
