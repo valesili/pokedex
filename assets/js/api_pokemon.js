@@ -1,4 +1,5 @@
 import { ItemPokemon } from './item_pokemons.js';
+import { ModalPokemon } from './modal_pokemon.js';
 
 export class ApiPokemons {
   constructor() {
@@ -14,7 +15,7 @@ export class ApiPokemons {
 
         pokemons = pokemons.map(i => { return { name: i.name } });
 
-        console.log(pokemons);
+        // console.log(pokemons);
 
         this.pokemons = await Promise.all(pokemons.map(async pokemon => await this.getDataPokemon(pokemon)));
 
@@ -36,6 +37,9 @@ export class ApiPokemons {
         const dataPokemon = (await response.json());
         pokemon.img = dataPokemon.sprites.front_default;
         pokemon.types = dataPokemon.types.map(item => item.type.name);
+        pokemon.abilities = dataPokemon.abilities.map(a => a.ability.name);
+        pokemon.weight = dataPokemon.weight;
+        pokemon.height = dataPokemon.height;
         return pokemon;
       }
       else alert('No se obtuvo información');
@@ -50,6 +54,8 @@ export class ApiPokemons {
 
     const itemPokemon = new ItemPokemon(pokemon);
     const cardPokemon = await itemPokemon.createAndGetItemPokemon();
+
+    cardPokemon.addEventListener('click', () => this.showModal(pokemon));
 
     pokemonListEl.insertAdjacentElement('beforeend', cardPokemon);
   };
@@ -70,5 +76,10 @@ export class ApiPokemons {
       this.filteredPokemons.forEach(p => this.showPokemon(p));
     }
     else this.pokemons.forEach(p => this.showPokemon(p));
+  }
+
+  showModal(pokemon) {
+    const modalPokemon = new ModalPokemon(pokemon);
+    modalPokemon.show(); 
   }
 }
